@@ -25,6 +25,15 @@ const SideBar = () => {
 		<Drawer
 			variant="permanent"
 			open
+			sx={{
+				'& .MuiDrawer-paper': {
+					background:
+						'linear-gradient(160deg, rgba(27, 38, 68, 0.45), rgba(13, 20, 35, 0.35))',
+					borderRight: '1px solid rgba(210, 228, 255, 0.14)',
+					backdropFilter: 'blur(22px) saturate(180%)',
+					WebkitBackdropFilter: 'blur(22px) saturate(180%)',
+				},
+			}}
 			classes={{
 				paper: open()
 					? 'drawer-paper drawer-paper-opened'

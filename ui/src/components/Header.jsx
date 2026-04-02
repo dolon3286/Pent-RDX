@@ -22,11 +22,11 @@ const Header = () => {
 
 	return (
 		<AppBar>
-			<Toolbar sx={{ justifyContent: 'space-between' }}>
+			<Toolbar sx={{ justifyContent: 'space-between', minHeight: 72 }}>
 				<A href="/">
 					<Box sx={{ display: 'flex', alignItems: 'center' }}>
 						<AppIcon />
-						<Typography variant="h4" noWrap sx={{ pl: 1.5 }}>
+						<Typography variant="h4" noWrap sx={{ pl: 1.5, fontWeight: 650 }}>
 							Pentaract
 						</Typography>
 					</Box>

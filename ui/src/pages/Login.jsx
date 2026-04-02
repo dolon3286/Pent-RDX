@@ -42,7 +42,7 @@ const Login = () => {
 
 	return (
 		<Container maxWidth="sm" sx={{ width: 'fit-content' }}>
-			<Paper sx={{ mt: '20vh' }} elevation={4}>
+			<Paper sx={{ mt: '20vh', borderRadius: 4 }} elevation={4}>
 				<Box
 					component="form"
 					onSubmit={handleSubmit}
@@ -57,20 +57,8 @@ const Login = () => {
 				>
 					<Typography variant="h5">Pentaract Account</Typography>
 					<Divider />
-					<TextField
-						name="email"
-						label="email"
-						variant="standard"
-						type="email"
-						required
-					/>
-					<TextField
-						name="password"
-						label="Password"
-						variant="standard"
-						type="password"
-						required
-					/>
+					<TextField name="email" label="email" type="email" required />
+					<TextField name="password" label="Password" type="password" required />
 					<Divider />
 					<Button type="submit" variant="contained" color="secondary">
 						Login
