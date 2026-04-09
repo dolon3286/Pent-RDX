@@ -29,7 +29,9 @@ impl<'d> StorageManagerService<'d> {
     pub fn new(db: &'d PgPool, telegram_baseurl: &'d str, rate_limit: u8) -> Self {
         let files_repo = FilesRepository::new(db);
         let storages_repo = StoragesRepository::new(db);
-        let chunk_size = 20 * 1024 * 1024;
+        // Telegram uploads can fail with HTTP 400 when chunk size is set exactly to 20 MiB.
+        // Keep a safety margin below the documented limit.
+        let chunk_size = 19 * 1024 * 1024;
         Self {
             storages_repo,
             files_repo,

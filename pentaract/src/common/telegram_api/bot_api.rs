@@ -1,4 +1,5 @@
 use reqwest::multipart;
+use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::{
@@ -7,6 +8,11 @@ use crate::{
 };
 
 use super::schemas::{DownloadBodySchema, UploadBodySchema, UploadSchema};
+
+#[derive(Debug, Deserialize)]
+struct TelegramErrorSchema {
+    description: String,
+}
 
 pub struct TelegramBotApi<'t> {
     base_url: &'t str,
@@ -51,11 +57,19 @@ impl<'t> TelegramBotApi<'t> {
             .send()
             .await?;
 
-        match response.error_for_status() {
-            // https://stackoverflow.com/a/32679930/12255756
-            Ok(r) => Ok(r.json::<UploadBodySchema>().await?.result.document),
-            Err(e) => Err(e.into()),
+        if response.status().is_success() {
+            return Ok(response.json::<UploadBodySchema>().await?.result.document);
         }
+
+        let status = response.status();
+        let body = response.text().await.unwrap_or_default();
+        let description = serde_json::from_str::<TelegramErrorSchema>(&body)
+            .map(|error| error.description)
+            .unwrap_or(body);
+
+        Err(crate::errors::PentaractError::TelegramAPIError(format!(
+            "{status}: {description}"
+        )))
     }
 
     pub async fn download(
