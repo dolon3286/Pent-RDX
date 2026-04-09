@@ -9,23 +9,37 @@ import TableContainer from '@suid/material/TableContainer'
 import TableHead from '@suid/material/TableHead'
 import TableRow from '@suid/material/TableRow'
 import Button from '@suid/material/Button'
+import DeleteIcon from '@suid/icons-material/Delete'
 import { Show, createSignal, mapArray, onMount } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 
 import API from '../../api'
 import { convertSize } from '../../common/size_converter'
+import ActionConfirmDialog from '../../components/ActionConfirmDialog'
 
 const Storages = () => {
 	/**
 	 * @type {[import("solid-js").Accessor<import("../../api").StorageWithInfo[]>, any]}
 	 */
 	const [storages, setStorages] = createSignal([])
+	const [storageToDelete, setStorageToDelete] = createSignal(null)
 	const navigate = useNavigate()
 
 	onMount(async () => {
 		const storagesSchema = await API.storages.listStorages()
 		setStorages(storagesSchema.storages)
 	})
+
+	const removeStorage = async () => {
+		const selectedStorage = storageToDelete()
+		if (!selectedStorage) {
+			return
+		}
+
+		await API.storages.deleteStorage(selectedStorage.id)
+		setStorages((s) => s.filter((storage) => storage.id !== selectedStorage.id))
+		setStorageToDelete(null)
+	}
 
 	return (
 		<Stack container>
@@ -57,6 +71,7 @@ const Storages = () => {
 									<TableCell>Chat ID</TableCell>
 									<TableCell>Size</TableCell>
 									<TableCell>Files</TableCell>
+									<TableCell align="right">Actions</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -74,6 +89,17 @@ const Storages = () => {
 										<TableCell>{storage.chat_id}</TableCell>
 										<TableCell>{convertSize(storage.size)}</TableCell>
 										<TableCell>{storage.files_amount}</TableCell>
+										<TableCell align="right">
+											<Button
+												color="warning"
+												onClick={(e) => {
+													e.stopPropagation()
+													setStorageToDelete(storage)
+												}}
+											>
+												<DeleteIcon />
+											</Button>
+										</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
@@ -81,6 +107,15 @@ const Storages = () => {
 					</Table>
 				</TableContainer>
 			</Grid>
+
+			<ActionConfirmDialog
+				isOpened={!!storageToDelete()}
+				entity="storage"
+				action="Delete"
+				actionDescription={`delete storage "${storageToDelete()?.name || ''}"`}
+				onCancel={() => setStorageToDelete(null)}
+				onConfirm={removeStorage}
+			/>
 		</Stack>
 	)
 }

@@ -9,22 +9,38 @@ import TableContainer from '@suid/material/TableContainer'
 import TableHead from '@suid/material/TableHead'
 import TableRow from '@suid/material/TableRow'
 import Button from '@suid/material/Button'
+import DeleteIcon from '@suid/icons-material/Delete'
 import { Show, createSignal, mapArray, onMount } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 
 import API from '../../api'
+import ActionConfirmDialog from '../../components/ActionConfirmDialog'
 
 const StorageWorkers = () => {
 	/**
 	 * @type {[import("solid-js").Accessor<import("../../api").StorageWorker[]>, any]}
 	 */
 	const [storageWorkers, setStorageWorkers] = createSignal([])
+	const [storageWorkerToDelete, setStorageWorkerToDelete] = createSignal(null)
 	const navigate = useNavigate()
 
 	onMount(async () => {
 		const storageWorkers = await API.storageWorkers.listStorageWorkers()
 		setStorageWorkers(storageWorkers)
 	})
+
+	const removeStorageWorker = async () => {
+		const selectedStorageWorker = storageWorkerToDelete()
+		if (!selectedStorageWorker) {
+			return
+		}
+
+		await API.storageWorkers.deleteStorageWorker(selectedStorageWorker.id)
+		setStorageWorkers((workers) =>
+			workers.filter((worker) => worker.id !== selectedStorageWorker.id)
+		)
+		setStorageWorkerToDelete(null)
+	}
 
 	return (
 		<Stack container>
@@ -55,6 +71,7 @@ const StorageWorkers = () => {
 									<TableCell>Name</TableCell>
 									<TableCell>Storage</TableCell>
 									<TableCell>Token</TableCell>
+									<TableCell align="right">Actions</TableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -67,6 +84,14 @@ const StorageWorkers = () => {
 										</TableCell>
 										<TableCell>{sw.storage_id}</TableCell>
 										<TableCell>{sw.token}</TableCell>
+										<TableCell align="right">
+											<Button
+												color="warning"
+												onClick={() => setStorageWorkerToDelete(sw)}
+											>
+												<DeleteIcon />
+											</Button>
+										</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
@@ -74,6 +99,15 @@ const StorageWorkers = () => {
 					</Table>
 				</TableContainer>
 			</Grid>
+
+			<ActionConfirmDialog
+				isOpened={!!storageWorkerToDelete()}
+				entity="storage worker"
+				action="Delete"
+				actionDescription={`delete storage worker "${storageWorkerToDelete()?.name || ''}"`}
+				onCancel={() => setStorageWorkerToDelete(null)}
+				onConfirm={removeStorageWorker}
+			/>
 		</Stack>
 	)
 }

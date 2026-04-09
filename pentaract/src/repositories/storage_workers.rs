@@ -93,6 +93,25 @@ impl<'d> StorageWorkersRepository<'d> {
         .map_err(|e| map_not_found(e, "storage_worker"))
     }
 
+    pub async fn delete_by_id_and_user_id(&self, id: Uuid, user_id: Uuid) -> PentaractResult<()> {
+        let result = sqlx::query(&format!(
+            "DELETE FROM {STORAGE_WORKERS_TABLE} WHERE id = $1 AND user_id = $2"
+        ))
+        .bind(id)
+        .bind(user_id)
+        .execute(self.db)
+        .await
+        .map_err(|_| PentaractError::Unknown)?;
+
+        if result.rows_affected() == 0 {
+            return Err(PentaractError::DoesNotExist(
+                "Such storage worker does not exist".to_string(),
+            ));
+        }
+
+        Ok(())
+    }
+
     // https://www.db-fiddle.com/f/fHcCh7bRtVSxyDfPvPyDre/11
     pub async fn get_token(
         &self,

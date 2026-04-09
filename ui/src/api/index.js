@@ -98,6 +98,13 @@ const getStorage = async (id) => {
 	return await apiRequest(`/storages/${id}`, 'get', getAuthToken())
 }
 
+/**
+ * @param {string} id
+ */
+const deleteStorage = async (id) => {
+	await apiRequest(`/storages/${id}`, 'delete', getAuthToken())
+}
+
 /////////////////////////////////////////////////////////////
 ////  ACCESS
 /////////////////////////////////////////////////////////////
@@ -190,6 +197,13 @@ const createStorageWorker = async (name, token, storage_id) => {
  */
 const listStorageWorkers = async () => {
 	return await apiRequest('/storage_workers', 'get', getAuthToken())
+}
+
+/**
+ * @param {string} id
+ */
+const deleteStorageWorker = async (id) => {
+	await apiRequest(`/storage_workers/${id}`, 'delete', getAuthToken())
 }
 
 /////////////////////////////////////////////////////////////
@@ -318,6 +332,7 @@ const API = {
 		createStorage,
 		listStorages,
 		getStorage,
+		deleteStorage,
 	},
 	access: {
 		grantAccess,
@@ -327,6 +342,7 @@ const API = {
 	storageWorkers: {
 		createStorageWorker,
 		listStorageWorkers,
+		deleteStorageWorker,
 	},
 	files: {
 		createFolder,

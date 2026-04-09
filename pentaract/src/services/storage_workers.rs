@@ -52,6 +52,10 @@ impl<'d> StorageWorkersService<'d> {
         self.repo.list_by_user_id(user.id).await
     }
 
+    pub async fn delete(&self, id: Uuid, user: &AuthUser) -> PentaractResult<()> {
+        self.repo.delete_by_id_and_user_id(id, user.id).await
+    }
+
     pub async fn has_storage_workers(
         &self,
         storage_id: Uuid,

@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use axum::{
-    extract::{Query, State},
+    extract::{Path, Query, State},
     http::StatusCode,
     middleware,
     response::{IntoResponse, Response},
@@ -26,6 +26,7 @@ impl StorageWorkersRouter {
     pub fn get_router(state: Arc<AppState>) -> Router {
         Router::new()
             .route("/", get(Self::list).post(Self::create))
+            .route("/:storage_worker_id", axum::routing::delete(Self::delete))
             .route("/has_workers", get(Self::has_storages_workers))
             .route_layer(middleware::from_fn_with_state(
                 state.clone(),
@@ -51,6 +52,17 @@ impl StorageWorkersRouter {
     ) -> impl IntoResponse {
         let sws = StorageWorkersService::new(&state.db).list(&user).await?;
         Ok::<_, (StatusCode, String)>((StatusCode::OK, Json(sws)))
+    }
+
+    async fn delete(
+        State(state): State<Arc<AppState>>,
+        Extension(user): Extension<AuthUser>,
+        Path(id): Path<uuid::Uuid>,
+    ) -> Result<StatusCode, (StatusCode, String)> {
+        StorageWorkersService::new(&state.db)
+            .delete(id, &user)
+            .await?;
+        Ok(StatusCode::NO_CONTENT)
     }
 
     pub async fn has_storages_workers(
