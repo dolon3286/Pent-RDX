@@ -15,11 +15,40 @@ import NotFound from './pages/404'
 
 const theme = createTheme({
 	palette: {
+		mode: 'light',
 		primary: {
-			main: '#0D1821',
+			main: '#5F6FFF',
 		},
 		secondary: {
-			main: '#F9E900',
+			main: '#8BE9FF',
+		},
+		background: {
+			default: '#e9f1ff',
+			paper: 'rgba(255, 255, 255, 0.55)',
+		},
+	},
+	shape: {
+		borderRadius: 20,
+	},
+	components: {
+		MuiPaper: {
+			styleOverrides: {
+				root: {
+					backdropFilter: 'blur(16px)',
+					background: 'linear-gradient(120deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.35))',
+					border: '1px solid rgba(255, 255, 255, 0.55)',
+					boxShadow: '0 12px 28px rgba(70, 88, 149, 0.18)',
+				},
+			},
+		},
+		MuiButton: {
+			styleOverrides: {
+				root: {
+					borderRadius: '999px',
+					textTransform: 'none',
+					fontWeight: 600,
+				},
+			},
 		},
 	},
 })

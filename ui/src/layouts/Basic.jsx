@@ -15,15 +15,17 @@ const BasicLayout = () => {
 	return (
 		<>
 			<Header />
-			<Box>
+			<Box class="liquid-shell">
 				<CssBaseline />
 				<Toolbar />
 
 				<Box sx={{ display: 'flex' }}>
-					<SideBar></SideBar>
+					<SideBar />
 
-					<Container sx={{ pt: 4 }}>
-						<Outlet />
+					<Container sx={{ pt: 4, pb: 4 }}>
+						<Box class="liquid-main">
+							<Outlet />
+						</Box>
 					</Container>
 				</Box>
 			</Box>
