@@ -32,9 +32,12 @@ const SideBar = () => {
 			}}
 			sx={{
 				'& .MuiDrawer-paper': {
-					background: 'linear-gradient(150deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.28))',
-					backdropFilter: 'blur(16px)',
-					borderRight: '1px solid rgba(255, 255, 255, 0.45)',
+					background:
+						'linear-gradient(160deg, rgba(255, 255, 255, 0.24), rgba(128, 227, 152, 0.1))',
+					backdropFilter: 'blur(18px) saturate(120%)',
+					borderRight: '1px solid rgba(199, 255, 211, 0.33)',
+					boxShadow: '8px 0 30px rgba(8, 34, 17, 0.32)',
+					color: '#ecffef',
 				},
 			}}
 		>
