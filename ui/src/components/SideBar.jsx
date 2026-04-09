@@ -30,6 +30,13 @@ const SideBar = () => {
 					? 'drawer-paper drawer-paper-opened'
 					: 'drawer-paper drawer-paper-closed',
 			}}
+			sx={{
+				'& .MuiDrawer-paper': {
+					background: 'linear-gradient(150deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.28))',
+					backdropFilter: 'blur(16px)',
+					borderRight: '1px solid rgba(255, 255, 255, 0.45)',
+				},
+			}}
 		>
 			<List>
 				<ListItem disablePadding sx={{ display: 'block' }}>

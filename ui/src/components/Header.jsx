@@ -21,19 +21,27 @@ const Header = () => {
 	}
 
 	return (
-		<AppBar>
+		<AppBar
+			elevation={0}
+			sx={{
+				background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.28))',
+				backdropFilter: 'blur(14px)',
+				borderBottom: '1px solid rgba(255, 255, 255, 0.45)',
+				color: '#13213c',
+			}}
+		>
 			<Toolbar sx={{ justifyContent: 'space-between' }}>
 				<A href="/">
 					<Box sx={{ display: 'flex', alignItems: 'center' }}>
 						<AppIcon />
-						<Typography variant="h4" noWrap sx={{ pl: 1.5 }}>
+						<Typography variant="h4" noWrap sx={{ pl: 1.5, fontWeight: 700 }}>
 							Pentaract
 						</Typography>
 					</Box>
 				</A>
 
-				<IconButton onClick={logout}>
-					<LogoutIcon sx={{ color: 'white' }} />
+				<IconButton onClick={logout} sx={{ color: '#13213c' }}>
+					<LogoutIcon />
 				</IconButton>
 			</Toolbar>
 		</AppBar>
